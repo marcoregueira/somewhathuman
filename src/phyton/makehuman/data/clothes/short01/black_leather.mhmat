@@ -1,0 +1,39 @@
+# Material definition for short01blackleather
+
+name short01blackleather
+ambientColor 1.0 1.0 1.0
+diffuseColor 1.0 1.0 1.0
+specularColor 0.5 0.5 0.5
+shininess 0.1961
+emissiveColor 0.0 0.0 0.0
+opacity 1.0
+translucency 0.0
+
+shadeless False
+wireframe False
+transparent False
+alphaToCoverage True
+backfaceCull True
+depthless False
+
+castShadows True
+
+receiveShadows True
+
+diffuseTexture short01_black_diffuse.png
+normalmapTexture short01_normals.png
+normalmapIntensity 1.0
+
+shader data/shaders/glsl/litsphere
+
+shaderParam AdditiveShading 0.5
+shaderParam litsphereTexture data/litspheres/lit_refl_sharp.png
+
+shaderConfig ambientOcclusion True
+shaderConfig normal True
+shaderConfig bump False
+shaderConfig displacement False
+shaderConfig vertexColors True
+shaderConfig spec False
+shaderConfig transparency True
+shaderConfig diffuse True

@@ -1,0 +1,39 @@
+# Material definition for short01Material
+
+name short01Material
+ambientColor 1.0 1.0 1.0
+diffuseColor 1.0 1.0 1.0
+specularColor 0.898039215686 0.898039215686 0.898039215686
+shininess 0.8
+emissiveColor 0.0 0.0 0.0
+opacity 1.0
+translucency 0.0
+
+shadeless False
+wireframe False
+transparent False
+alphaToCoverage True
+backfaceCull True
+depthless False
+
+castShadows True
+
+receiveShadows True
+
+diffuseTexture jeans01_black_diffuse.png
+normalmapTexture jeans01_normals.png
+normalmapIntensity 1.0
+
+shader data/shaders/glsl/litsphere
+
+shaderParam AdditiveShading 0.5
+shaderParam litsphereTexture data/litspheres/lit_refl_sharp_aniso.png
+
+shaderConfig ambientOcclusion True
+shaderConfig normal True
+shaderConfig bump False
+shaderConfig displacement False
+shaderConfig vertexColors True
+shaderConfig spec False
+shaderConfig transparency True
+shaderConfig diffuse True

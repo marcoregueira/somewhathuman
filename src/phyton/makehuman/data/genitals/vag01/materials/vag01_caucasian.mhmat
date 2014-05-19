@@ -1,0 +1,31 @@
+# Material definition for vag01_caucasian
+
+name vag01_caucasian
+ambientColor 0.301960784314 0.278431372549 0.278431372549
+diffuseColor 1.0 1.0 1.0
+specularColor 0.0274509803922 0.0274509803922 0.0274509803922
+shininess 0.5
+emissiveColor 0.196078431373 0.101960784314 0.101960784314
+opacity 1.0
+translucency 0.0
+
+sssEnabled true
+sssRScale 5.0
+sssGScale 2.5
+sssBScale 1.0
+
+diffuseTexture vag01_lightskinned_diffuse.png
+normalmapTexture vag01_normals.png
+normalmapIntensity 1.0
+
+
+shaderParam litsphereTexture data/litspheres/lit_caucasian_sweat.png
+
+shader data/shaders/glsl/litsphere
+shaderConfig diffuse True
+shaderConfig normal True
+shaderConfig bump True
+shaderConfig spec True
+shaderConfig vertexColors True
+shaderConfig displacement False
+

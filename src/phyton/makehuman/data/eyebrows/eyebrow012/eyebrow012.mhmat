@@ -1,0 +1,30 @@
+# Material definition for MakeHuman benchmark clothes
+
+name eyebrow012
+
+// Color shading attributes
+ambientColor 1.0 1.0 1.0
+diffuseColor  1 1 1
+specularColor  0 0 0
+shininess 0.5
+opacity 1
+transparent True 
+backfaceCull False
+
+castShadows False
+receiveShadows True
+
+// Textures and properties
+diffuseTexture eyebrow012.png
+bumpTexture eyebrow012.png
+
+// Shader programme
+shader data/shaders/glsl/phong
+
+// Configure built-in shader defines
+shaderConfig diffuse true
+shaderConfig bump true
+shaderConfig normal  false
+shaderConfig displacement  false
+shaderConfig spec  false
+shaderConfig vertexColors true

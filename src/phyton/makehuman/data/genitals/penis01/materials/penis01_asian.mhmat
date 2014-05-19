@@ -1,0 +1,46 @@
+# Material definition for male_genital01_asian
+
+name male_genital01_asian
+ambientColor 0.301960784314 0.278431372549 0.278431372549
+diffuseColor 1.0 0.95 0.85
+specularColor 0.0274509803922 0.0274509803922 0.0274509803922
+shininess 0.5
+emissiveColor 0.196078431373 0.101960784314 0.101960784314
+opacity 1.0
+translucency 0.0
+
+shadeless False
+wireframe False
+transparent False
+alphaToCoverage True
+backfaceCull True
+depthless False
+
+castShadows True
+
+receiveShadows True
+
+diffuseTexture penis01_lightskinned_diffuse.png
+normalmapTexture penis01_normals.png
+normalmapIntensity 1.0
+aomapTexture penis01_ao.png
+aomapIntensity 1.0
+
+# Sub-surface scattering parameters
+sssEnabled True
+sssRScale 5.0
+sssGScale 2.5
+sssBScale 1.0
+
+shader data/shaders/glsl/litsphere
+
+shaderParam litsphereTexture data/litspheres/lit_asian.png
+
+shaderConfig ambientOcclusion True
+shaderConfig normal True
+shaderConfig bump True
+shaderConfig displacement False
+shaderConfig vertexColors True
+shaderConfig spec True
+shaderConfig transparency True
+shaderConfig diffuse True
