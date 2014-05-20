@@ -38,7 +38,6 @@ TODO
 """
 
 from threading import Lock, Condition
-from PyQt4 import QtCore
 
 class Queue(object):
     def __init__(self):
@@ -46,6 +45,9 @@ class Queue(object):
         self.cond = Condition(self.lock)
         self.data = []
         self.live = True
+
+    def start(self):
+        return
 
     def put(self, values):
         self.cond.acquire()
@@ -68,14 +70,17 @@ class Queue(object):
         self.cond.notify()
         self.cond.release()
 
-class Thread(QtCore.QThread):
+class Thread(object):
     def __init__(self, queue, callback):
-        QtCore.QThread.__init__(self)
         self.queue = queue
         self.callback = callback
 
     def __del__(self):
-        self.wait()
+        self.queue = self.queue
+        # self.wait()
+    
+    def start(self):
+        return
 
     def run(self):
         while self.queue.live:

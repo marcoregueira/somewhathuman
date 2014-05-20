@@ -87,8 +87,9 @@ class Human(guicommon.Object):
         self.bodyZones = ['l-eye','r-eye', 'jaw', 'nose', 'mouth', 'head', 'neck', 'torso', 'hip', 'pelvis', 'r-upperarm', 'l-upperarm', 'r-lowerarm', 'l-lowerarm', 'l-hand',
                           'r-hand', 'r-upperleg', 'l-upperleg', 'r-lowerleg', 'l-lowerleg', 'l-foot', 'r-foot', 'ear']
 
-        self.material = material.fromFile(getSysDataPath('skins/default.mhmat'))
-        self._defaultMaterial = material.Material().copyFrom(self.material)
+        #TODO: MARCO: NO NECESITAMOS MATERIALES PARA GENERAR MD5 PERO SI EN EL FUTURO QUIERO GENERAR IMÁGENES TENDRÉ QUE RESTAURAR ESTO
+        # self.material = material.fromFile(getSysDataPath('skins/default.mhmat'))
+        # self._defaultMaterial = material.Material().copyFrom(self.material)
 
         self._modifiers = dict()
         self._modifier_varMapping = dict()              # Maps macro variable to the modifier group that modifies it

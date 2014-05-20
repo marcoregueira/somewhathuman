@@ -184,28 +184,29 @@ def loadMesh(path, loadColors=1, maxFaces=None):
 
     obj.path = path
 
+    #try:
+    npzpath = os.path.splitext(path)[0] + '.npz'
     try:
-        npzpath = os.path.splitext(path)[0] + '.npz'
-        try:
-            if not os.path.isfile(npzpath):
-                log.message('compiled file missing: %s', npzpath)
-                raise RuntimeError('compiled file missing: %s', npzpath)
-            if os.path.isfile(path) and os.path.getmtime(path) > os.path.getmtime(npzpath):
-                log.message('compiled file out of date: %s', npzpath)
-                raise RuntimeError('compiled file out of date: %s', npzpath)
-            loadBinaryMesh(obj, npzpath)
-        except Exception as e:
-            showTrace = not isinstance(e, RuntimeError)
-            log.warning("Problem loading binary mesh: %s", e, exc_info=showTrace)
-            loadTextMesh(obj, path)
-            if isSubPath(npzpath, getPath('')):
-                # Only write compiled binary meshes to user data path
-                try:
-                    saveBinaryMesh(obj, npzpath)
-                except StandardError:
-                    log.notice('unable to save compiled mesh: %s', npzpath)
-            else:
-                log.debug('Not writing compiled meshes to system paths (%s).', npzpath)
+        if not os.path.isfile(npzpath):
+            log.message('compiled file missing: %s', npzpath)
+            raise RuntimeError('compiled file missing: %s', npzpath)
+        if os.path.isfile(path) and os.path.getmtime(path) > os.path.getmtime(npzpath):
+            log.message('compiled file out of date: %s', npzpath)
+            #MARCO OUT OF DATE MESH ????
+            #raise RuntimeError('compiled file out of date: %s', npzpath)
+        loadBinaryMesh(obj, npzpath)
+    except Exception as e:
+        showTrace = not isinstance(e, RuntimeError)
+        log.warning("Problem loading binary mesh: %s", e, exc_info=showTrace)
+        loadTextMesh(obj, path)
+        if isSubPath(npzpath, getPath('')):
+            # Only write compiled binary meshes to user data path
+            try:
+                saveBinaryMesh(obj, npzpath)
+            except StandardError:
+                log.notice('unable to save compiled mesh: %s', npzpath)
+        else:
+            log.debug('Not writing compiled meshes to system paths (%s).', npzpath)
     except:
         log.error('Unable to load obj file: %s', path, exc_info=True)
         return False

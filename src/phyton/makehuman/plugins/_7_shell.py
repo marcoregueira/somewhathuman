@@ -47,7 +47,6 @@ import gui3d
 import gui
 from core import G
 import log
-from PyQt4 import QtCore, QtGui
 
 MAX_COMPLETIONS = -1
 

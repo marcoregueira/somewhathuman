@@ -38,7 +38,7 @@ TODO
 """
 
 import atexit
-from cProfile import Profile
+# from cProfile import Profile
 
 _sort = 'cumulative'
 _profiler = None

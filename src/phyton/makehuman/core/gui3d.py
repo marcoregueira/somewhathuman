@@ -333,7 +333,7 @@ class Category(View):
 # The application
 app = None
 
-class Application(events3d.EventHandler):
+class Application():
     """
    The Application.
     """
