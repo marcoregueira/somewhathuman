@@ -38,7 +38,6 @@ import log
 
 import proxy
 import exportutils
-import posemode
 
 from . import mhx_writer
 from . import posebone
@@ -61,7 +60,7 @@ def exportMhx(filepath, config):
     time1 = time.clock()
     human = config.human
     config.setupTexFolder(filepath)
-    config.setOffset(human)
+    #config.setOffset(human)
 
     filename = os.path.basename(filepath)
     name = os.path.splitext(filename)[0]

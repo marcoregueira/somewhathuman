@@ -129,7 +129,7 @@ class Object3D(object):
 
         self.__object = None
 
-    def clone(self, scale=1.0, filterMaskedVerts=False):
+    def clone(self, scale=1.0, filterMaskedVerts=False):    # TODO it's also possible to add offset to the parameters
         """
         Create a clone of this mesh, with adapted scale.
         If filterVerts is True, all vertices that are not required (do not
@@ -141,6 +141,9 @@ class Object3D(object):
         the link by setting other.object to None before attaching it to a new
         object.
         """
+        if self.getFaceCount(excludeMaskedFaces=filterMaskedVerts) == 0:
+            raise RuntimeError("Error cloning mesh %s. Cannot clone a mesh with 0 (unmasked) faces!", self.name)
+
         other = type(self)(self.name, self.vertsPerPrimitive)
 
         for prop in ['cameraMode', 'visibility', 'pickable', 
