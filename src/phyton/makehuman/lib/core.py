@@ -37,6 +37,9 @@ Abstract
 TODO
 """
 
+from flask import g
+from werkzeug.local import LocalProxy
+
 class Globals(object):
     def __init__(self):
         self.app = None
@@ -47,5 +50,9 @@ class Globals(object):
         self.windowHeight = 600
         self.windowWidth = 800
         self.clearColor = (0.0, 0.0, 0.0, 0.0)
+        self.test = "testing"
 
-G = Globals()
+#http://flask.pocoo.org/snippets/13/
+#http://flask.pocoo.org/docs/appcontext/
+
+G = LocalProxy(lambda: g.G)
