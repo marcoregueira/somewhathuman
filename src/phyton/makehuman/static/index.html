@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/ico/favicon.png">
+    <title>Starter Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="dist/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+    <link href="assets/css/ion.rangeSlider.css" rel="stylesheet">
+    <link href="assets/css/ion.rangeSlider.skinNice.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+      <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Project name</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="source.html">Source code</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+    <div class="container">
+        <div class="starter-template">
+            <h1>SomewhatHuman</h1>
+            <p class="lead">
+                This is a quick and dirty adaptation of MakeHuman to the Web.<br>
+                You can adjust some parameters and see what happens...
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <form action="/getmodel" method="POST">
+
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active">
+                            <h4 class="list-group-item-heading">Body parameters</h4>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <p class="list-group-item-text">
+                                Age
+                                <div>
+                                    <input class="slider" name="age" value="0.5" />
+                                </div>
+                            </p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            Bust/Chest <div>
+                                <input class="slider" name="age" value="0.5" />
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            Waist <div>
+                                <input class="slider" name="age" value="0.5" />
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            Hip <div>
+                                <input class="slider" name="age" value="0.5" />
+                            </div>
+                        </a>
+                        <div href="#" class="list-group-item">
+                            Muscle <div>
+                                       <input class="slider" name="age" value="0.5" />
+                                   </div>
+                        </div>
+                        <div href="#" class="list-group-item text-center">
+                            <button class="btn btn-success btnsend" type="submit">Reload</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-8">
+                <div id="viewPort3d" style="height: 570px;"></div>
+            </div>
+        </div>
+    </div><!-- /.container -->
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="assets/js/jquery.js"></script>
+    <script src="dist/js/bootstrap.min.js"></script>
+    <script src="assets/js/ion.rangeSlider.min.js"></script>
+
+    <script src="js/three.min.js"></script>
+
+    <script src="js/loaders/MTLLoader.js"></script>
+    <script src="js/loaders/OBJMTLLoader.js"></script>
+
+    <script src="js/Detector.js"></script>
+    <script src="js/libs/stats.min.js"></script>
+
+    <script>
+
+        var container, stats;
+        var camera, scene, renderer;
+        var particleLight, pointLight;
+        var mouseX = 0, mouseY = 0;
+        var windowHalfX = window.innerWidth / 2;
+        var windowHalfY = window.innerHeight / 2;
+        var currentObject = null;
+
+        function init() {
+
+            //container = document.createElement('div');
+            //document.body.appendChild(container);
+            container = document.getElementById("viewPort3d");
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+            //camera.position.z = 20;
+
+            // scene
+
+            scene = new THREE.Scene();
+
+            var ambient = new THREE.AmbientLight(0x444444);
+            scene.add(ambient);
+
+            particleLight = new THREE.Mesh(new THREE.SphereGeometry(4, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+            scene.add(particleLight);
+
+            var directionalLight = new THREE.DirectionalLight(0xffeedd);
+            directionalLight.position.set(0, 0, 1).normalize();
+            scene.add(directionalLight);
+
+            pointLight = new THREE.PointLight(0xff6666, 0.3);
+            pointLight.position = particleLight.position;
+            scene.add(pointLight);
+
+            loadModel('senormals.obj', 'senormals.mtl');
+
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize($(container).width(), $(container).height());
+            camera.aspect = $(container).width() / $(container).height();
+            camera.updateProjectionMatrix();
+            container.appendChild(renderer.domElement);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function loadModel(model, mtl) {
+            var loader = new THREE.OBJMTLLoader();
+            loader.load(model, mtl, function (object) {
+                if (currentObject != null) scene.remove(currentObject);
+                currentObject = object;
+                scene.add(object);
+            });
+        }
+
+        function onWindowResize() {
+
+            windowHalfX = window.innerWidth / 2;
+            windowHalfY = window.innerHeight / 2;
+
+            camera.aspect = $(container).width() / $(container).height();
+            camera.updateProjectionMatrix();
+
+            renderer.setSize($(container).width(), $(container).height());
+
+        }
+        function animate() {
+
+            requestAnimationFrame(animate);
+            render();
+
+        }
+        function render() {
+
+            var timer = Date.now() * 0.0005;
+
+            camera.position.x = 220 * Math.cos(timer);
+            camera.position.y = 100; // * 20;
+            camera.position.z = 220 * Math.sin(timer); //Math.sin(timer) * 10;
+
+            //camera.position.x = 220;
+            //camera.position.y = 100;
+            //camera.position.z = 220;
+
+            camera.lookAt(scene.position);
+
+            scene.position.y = 100;
+            particleLight.position.x = Math.sin(timer * 4) * 3009;
+            particleLight.position.y = Math.cos(timer * 6) * 4000;
+            particleLight.position.z = -Math.cos(timer * 4) * 3009;
+
+            renderer.render(scene, camera);
+        }
+
+        $(document).ready(
+            function () {
+                $('.slider').ionRangeSlider({
+                    min: 0,
+                    max: 1,
+                    type: 'single',
+                    step: 0.1,
+                    postfix: "",
+                    prettify: false,
+                    hideMinMax: true,
+                    hideFromTo: false,
+                    hasGrid: true
+                });
+
+                $('.btnsend').on('click', function (e) {
+                    e.preventDefault();
+                    var form = $('form:first');
+                    $.ajax({
+                        type: "POST",
+                        url: form.attr('action'),
+                        data: form.serialize(),
+                        success: function (response, data) {
+                            loadModel(response.model, response.texture);
+                        }
+                    });
+                });
+
+                init();
+                animate();
+            });
+
+    </script>
+
+</body>
+</html>
