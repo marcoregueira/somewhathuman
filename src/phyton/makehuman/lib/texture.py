@@ -38,9 +38,6 @@ TODO
 """
 
 import os.path
-from OpenGL.GL import *
-from OpenGL.GLU import *
-from OpenGL.GL.ARB.texture_non_power_of_two import *
 from core import G
 from image import Image
 import log

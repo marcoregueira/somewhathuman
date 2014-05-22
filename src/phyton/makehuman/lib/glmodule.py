@@ -40,26 +40,12 @@ from core import G
 
 import numpy as np
 
-import OpenGL
-OpenGL.ERROR_CHECKING = G.args.get('debugopengl', False)
-OpenGL.ERROR_LOGGING = G.args.get('debugopengl', False)
-OpenGL.FULL_LOGGING = G.args.get('fullloggingopengl', False)
-OpenGL.ERROR_ON_COPY = True
-from OpenGL.GL import *
-from OpenGL.GLU import *
-from OpenGL.GL.framebufferobjects import *
-from OpenGL.GL.ARB.transpose_matrix import *
-from OpenGL.GL.ARB.multisample import *
-from OpenGL.GL.ARB.texture_multisample import *
-
 from image import Image
 import debugdump
 import log
 from texture import Texture, getTexture, NOTFOUND_TEXTURE
 from shader import Shader
 import profiler
-
-g_primitiveMap = [GL_POINTS, GL_LINES, GL_TRIANGLES, GL_QUADS]
 
 TEX_NOT_FOUND = False
 MAX_TEXTURE_UNITS = 0
@@ -353,16 +339,17 @@ def OnInit():
 
 def OnExit():
     # Deactivate the pointers to vertex and normal array
-    glDisableClientState(GL_VERTEX_ARRAY)
-    glDisableClientState(GL_NORMAL_ARRAY)
     # glDisableClientState(GL_TEXTURE_COORD_ARRAY)
-    glDisableClientState(GL_COLOR_ARRAY)
     log.message("Exit from event loop\n")
 
 def setSceneLighting(scene):
     """
     Set lighting based on a scene config.
     """
+
+    #MARCO ILUMINACION GL ELIMINADA
+    return
+
     # Set global scene ambient
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, A(scene.environment.ambience, 1.0))
 

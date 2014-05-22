@@ -86,61 +86,7 @@ def inFile(path):
             yield f
     except:
         log.error('Failed to load file %s', path, exc_info=True)
-
-class PluginCheckBox(gui.CheckBox):
-
-    def __init__(self, module):
-
-        super(PluginCheckBox, self).__init__(module, module not in gui3d.app.settings['excludePlugins'])
-        self.module = module
-
-    def onClicked(self, event):
-        if self.selected:
-            gui3d.app.settings['excludePlugins'].remove(self.module)
-        else:
-            gui3d.app.settings['excludePlugins'].append(self.module)
-
-        gui3d.app.saveSettings()
-
-class PluginsTaskView(gui3d.TaskView):
-
-    def __init__(self, category):
-        gui3d.TaskView.__init__(self, category, 'Plugins')
-
-        self.scroll = self.addTopWidget(gui.VScrollArea())
-        self.pluginsBox = gui.GroupBox('Plugins')
-        self.pluginsBox.setSizePolicy(
-            gui.SizePolicy.MinimumExpanding,
-            gui.SizePolicy.MinimumExpanding)
-        self.scroll.setWidget(self.pluginsBox)
-
-        for module in sorted(gui3d.app.modules):
-            self.pluginsBox.addWidget(PluginCheckBox(module))
-
-class SymmetryAction(gui3d.Action):
-    def __init__(self, human, direction):
-        super(SymmetryAction, self).__init__('Apply symmetry %s' % ("left" if direction == 'l' else "right"))
-        self.human = human
-        self.direction = direction
-        self.before = [(m.fullName, m.getValue()) for m in human.modifiers]
-
-    def do(self):
-        if self.direction == 'r':
-            self.human.applySymmetryRight()
-        else:
-            self.human.applySymmetryLeft()
-        self.human.applyAllTargets(G.app.progress)
-        mh.redraw()
-        return True
-
-    def undo(self):
-        for (modifierName, value) in self.before:
-            self.human.getModifier(modifierName).setValue(value)
-        self.human.applyAllTargets(G.app.progress)
-        mh.redraw()
-        return True
-
-
+        
 class MHApplication(gui3d.Application, mh.Application):
     def __init__(self):
         if G.app is not None:
@@ -254,7 +200,7 @@ class MHApplication(gui3d.Application, mh.Application):
         self.undoStack = []
         self.redoStack = []
 
-        self.actions = None
+        self.actions = Expando()
 
         self.clearColor = [0.5, 0.5, 0.5]
         self.gridColor = [1.0, 1.0, 1.0]
@@ -316,7 +262,9 @@ class MHApplication(gui3d.Application, mh.Application):
 
         # Set a lower than default MAX_FACES value because we know the human has a good topology (will make it a little faster)
         # (we do not lower the global limit because that would limit the selection of meshes that MH would accept too much)
-        self.selectedHuman = self.addObject(human.Human(files3d.loadMesh(mh.getSysDataPath("3dobjs/base.obj"), maxFaces = 5)))
+        mesh = files3d.loadMesh(mh.getSysDataPath("3dobjs/base.obj"), maxFaces = 5)
+        humanModel = human.Human(mesh)
+        self.selectedHuman = self.addObject(humanModel)
 
     def loadScene(self):
 
@@ -436,6 +384,8 @@ class MHApplication(gui3d.Application, mh.Application):
                     task.callEvent('onCameraRotated', event)
 
         # Set up categories and tasks
+        # MARCO NO NEED
+        return
         self.files = guifiles.FilesCategory()
         self.addCategory(self.files)
         self.getCategory("Modelling")
@@ -533,8 +483,8 @@ class MHApplication(gui3d.Application, mh.Application):
 
         self.progress(0.9)
 
-        category = self.getCategory('Settings')
-        category.addTask(PluginsTaskView(category))
+        #category = self.getCategory('Settings')
+        #category.addTask(PluginsTaskView(category))
 
         mh.refreshLayout()
 
@@ -608,31 +558,30 @@ class MHApplication(gui3d.Application, mh.Application):
         #self.selectedHuman.callEvent('onChanged', events3d.HumanEvent(self.selectedHuman, 'reset'))
         self.selectedHuman.applyAllTargets(gui3d.app.progress)
 
-        self.prompt('Warning', 'MakeHuman is a character creation suite. It is designed for making anatomically correct humans.\nParts of this program may contain nudity.\nDo you want to proceed?', 'Yes', 'No', None, self.stop, 'nudityWarning')
-        # self.splash.hide()
+        #self.prompt('Warning', 'MakeHuman is a character creation suite. It is designed for making anatomically correct humans.\nParts of this program may contain nudity.\nDo you want to proceed?', 'Yes', 'No', None, self.stop, 'nudityWarning')
+        ## self.splash.hide()
 
-        if not self.args.get('noshaders', False) and \
-          ( not mh.Shader.supported() or mh.Shader.glslVersion() < (1,20) ):
-            self.prompt('Warning', 'Your system does not support OpenGL shaders (GLSL v1.20 required).\nOnly simple shading will be available.', 'Ok', None, None, None, 'glslWarning')
+        #if not self.args.get('noshaders', False) and \
+        #  ( not mh.Shader.supported() or mh.Shader.glslVersion() < (1,20) ):
+        #    self.prompt('Warning', 'Your system does not support OpenGL shaders (GLSL v1.20 required).\nOnly simple shading will be available.', 'Ok', None, None, None, 'glslWarning')
 
         self.currentFile.modified = False
 
         #printtree(self)
 
-        mh.changeCategory("Modelling")
+        #mh.changeCategory("Modelling")
 
-        self.redraw()
+        #self.redraw()
 
     def startupSequence(self):
         self._processCommandlineArgs(beforeLoaded = True)
 
-        mainwinGeometry = self.mainwin.storeGeometry()
-        mainwinBorder = (self.mainwin.frameGeometry().width() - self.mainwin.width(),
-             self.mainwin.frameGeometry().height() - self.mainwin.height())
+        # mainwinGeometry = None # self.mainwin.storeGeometry()
+        # mainwinBorder = None # (self.mainwin.frameGeometry().width() - self.mainwin.width(), self.mainwin.frameGeometry().height() - self.mainwin.height())
 
         # Move main window completely behind splash screen
-        self.mainwin.resize(self.splash.width() - mainwinBorder[0], self.splash.height() - mainwinBorder[1])
-        self.mainwin.move(self.splash.pos())
+        # self.mainwin.resize(self.splash.width() - mainwinBorder[0], self.splash.height() - mainwinBorder[1])
+        # self.mainwin.move(self.splash.pos())
 
         #self.splash.setFormat('<br><br><b><font size="10" color="#ffffff">%s</font></b>')
 
@@ -648,14 +597,14 @@ class MHApplication(gui3d.Application, mh.Application):
         log.message('Loading plugins')
         self.loadPlugins()
 
-        log.message('Loading GUI')
-        self.loadGui()
+        #log.message('Loading GUI')
+        #self.loadGui()
 
-        log.message('Loading theme')
-        try:
-            self.setTheme(self.settings.get('guiTheme', 'makehuman'))
-        except:
-            self.setTheme("default")
+        #log.message('Loading theme')
+        #try:
+        #    self.setTheme(self.settings.get('guiTheme', 'makehuman'))
+        #except:
+        #    self.setTheme("default")
 
         log.message('Applying targets')
         self.loadFinish()
@@ -668,20 +617,20 @@ class MHApplication(gui3d.Application, mh.Application):
 
         log.message('')
 
-        if sys.platform.startswith("darwin"):
-            self.splash.resize(0,0) # work-around for mac splash-screen closing bug
+        #if sys.platform.startswith("darwin"):
+        #    self.splash.resize(0,0) # work-around for mac splash-screen closing bug
 
-        self.splash.hide()
+        #self.splash.hide()
         # self.splash.finish(self.mainwin)
-        self.splash.close()
-        self.splash = None
+        #self.splash.close()
+        #self.splash = None
 
         # Restore main window size and position
-        if self.settings.get('restoreWindowSize', False):
-            self.mainwin.restoreGeometry(self.settings.get(
-                'windowGeometry', mainwinGeometry))
-        else:
-            self.mainwin.restoreGeometry(mainwinGeometry)
+        #if self.settings.get('restoreWindowSize', False):
+        #    self.mainwin.restoreGeometry(self.settings.get(
+        #        'windowGeometry', mainwinGeometry))
+        #else:
+        #    self.mainwin.restoreGeometry(mainwinGeometry)
 
         self._processCommandlineArgs(beforeLoaded = False)
 
@@ -809,36 +758,6 @@ class MHApplication(gui3d.Application, mh.Application):
         if 'language' in self.settings:
             self.setLanguage(self.settings['language'])
 
-        gui.Slider.showImages(self.settings['sliderImages'])
-
-        with inFile("shortcuts.ini") as f:
-            shortcuts = {}
-            for line in f:
-                modifier, key, action = line.strip().split(' ')
-                shortcuts[action] = (int(modifier), int(key))
-            if shortcuts.get('_versionSentinel') != (0, 0x87654321):
-                log.warning('shortcuts.ini out of date; ignoring')
-            else:
-                self.shortcuts.update(shortcuts)
-
-        with inFile("mouse.ini") as f:
-            mouseActions = dict([(method.__name__, shortcut)
-                                 for shortcut, method in self.mouseActions.iteritems()])
-            for line in f:
-                modifier, button, method = line.strip().split(' ')
-                if hasattr(self, method):
-                    mouseActions[method] = (int(modifier), int(button))
-            self.mouseActions = dict([(shortcut, getattr(self, method))
-                                      for method, shortcut in mouseActions.iteritems()])
-
-        with inFile("help.ini") as f:
-            helpIds = set()
-            for line in f:
-                helpIds.add(line.strip())
-            if self.dialog is not None:
-                self.dialog.helpIds.update(self.helpIds)
-            self.helpIds = helpIds
-
     def saveSettings(self, promptOnFail=False):
         try:
             if not os.path.exists(mh.getPath()):
@@ -918,35 +837,12 @@ class MHApplication(gui3d.Application, mh.Application):
             self.log_window.updateView()
         log.debug("Loaded theme %s", mh.getSysDataPath('themes/'+theme+'.mht'))
 
-        try:
-            f = open(mh.getSysDataPath('themes/%s.qss' % theme), 'r')
-            qStyle = "\n".join(f.readlines())
-            self.setStyleSheet(qStyle)
-            # Also set stylesheet on custom slider style
-            for widget in self.allWidgets():
-                if isinstance(widget, gui.Slider):
-                    widget.setStyleSheet(qStyle)
-            log.debug("Loaded Qt style %s", mh.getSysDataPath('themes/'+theme+'.qss'))
-        except:
-            self.setStyleSheet("")
-            # Also set stylesheet on custom slider style
-            for widget in self.allWidgets():
-                if isinstance(widget, gui.Slider):
-                    widget.setStyleSheet("")
-            '''
-            if theme != "default":
-                log.warning('Could not open Qt style file %s.', mh.getSysDataPath('themes/'+theme+'.qss'))
-            '''
-
         self.theme = theme
         self.reloadIcons()
         self.redraw()
 
     def reloadIcons(self):
-        if not self.actions:
-            return
-        for action in self.actions:
-            action.setIcon(gui.Action.getIcon(action.name))
+        return
 
     def getLookAndFeelStyles(self):
         return [ str(style) for style in gui.QtGui.QStyleFactory.keys() ]
@@ -956,7 +852,7 @@ class MHApplication(gui3d.Application, mh.Application):
         self.setStyle(style)
 
     def getLookAndFeel(self):
-        return str(self.style().objectName())
+        return ""
 
     def getThemeResource(self, folder, id):
         if '/' in id:
@@ -1310,10 +1206,7 @@ class MHApplication(gui3d.Application, mh.Application):
         self.status("Screengrab saved to %s", filename)
 
     def resetHuman(self):
-        if self.currentFile.modified:
-            self.prompt('Reset', 'By resetting the human you will lose all your changes, are you sure?', 'Yes', 'No', self._resetHuman)
-        else:
-            self._resetHuman()
+        self._resetHuman()
 
     def _resetHuman(self):
         self.selectedHuman.resetMeshValues()
@@ -1455,39 +1348,15 @@ class MHApplication(gui3d.Application, mh.Application):
         """
         Creates the actions toolbar with icon buttons.
         """
-        self.actions = gui.Actions()
 
         def action(*args, **kwargs):
-            action = gui.Action(*args, **kwargs)
-            self.mainwin.addAction(action)
-            if toolbar is not None:
-                toolbar.addAction(action)
-            return action
-
+            return ExpandoAction()
 
         # Global actions (eg. keyboard shortcuts)
         toolbar = None
 
-        self.actions.rendering = action('rendering', 'Rendering',     self.goToRendering)
-        self.actions.modelling = action('modelling', 'Modelling',     self.goToModelling)
-        self.actions.exit      = action('exit'     , 'Exit',          self.promptAndExit)
-
-        self.actions.rotateU   = action('rotateU',   'Rotate Up',     self.rotateUp)
-        self.actions.rotateD   = action('rotateD',   'Rotate Down',   self.rotateDown)
-        self.actions.rotateR   = action('rotateR',   'Rotate Right',  self.rotateRight)
-        self.actions.rotateL   = action('rotateL',   'Rotate Left',   self.rotateLeft)
-        self.actions.panU      = action('panU',      'Pan Up',        self.panUp)
-        self.actions.panD      = action('panD',      'Pan Down',      self.panDown)
-        self.actions.panR      = action('panR',      'Pan Right',     self.panRight)
-        self.actions.panL      = action('panL',      'Pan Left',      self.panLeft)
-        self.actions.zoomIn    = action('zoomIn',    'Zoom In',       self.zoomIn)
-        self.actions.zoomOut   = action('zoomOut',   'Zoom Out',      self.zoomOut)
-
-        self.actions.profiling = action('profiling', 'Profiling',     self.toggleProfiling, toggle=True)
-
-
         # 1 - File toolbar
-        toolbar = self.file_toolbar = mh.addToolBar("File")
+        # toolbar = self.file_toolbar = mh.addToolBar("File")
 
         self.actions.load      = action('load',      'Load',          self.goToLoad)
         self.actions.save      = action('save',      'Save',          self.doSave)
@@ -1495,7 +1364,7 @@ class MHApplication(gui3d.Application, mh.Application):
 
 
         # 2 - Edit toolbar
-        toolbar = self.edit_toolbar = mh.addToolBar("Edit")
+        # toolbar = self.edit_toolbar = mh.addToolBar("Edit")
 
         self.actions.undo      = action('undo',      'Undo',          self.undo)
         self.actions.redo      = action('redo',      'Redo',          self.redo)
@@ -1503,14 +1372,14 @@ class MHApplication(gui3d.Application, mh.Application):
 
 
         # 3 - View toolbar
-        toolbar = self.view_toolbar = mh.addToolBar("View")
+        # toolbar = self.view_toolbar = mh.addToolBar("View")
 
         self.actions.smooth    = action('smooth',    'Smooth',        self.toggleSubdivision, toggle=True)
         self.actions.wireframe = action('wireframe', 'Wireframe',     self.toggleSolid, toggle=True)
 
 
         # 4 - Symmetry toolbar
-        toolbar = self.sym_toolbar = mh.addToolBar("Symmetry")
+        # toolbar = self.sym_toolbar = mh.addToolBar("Symmetry")
 
         self.actions.symmetryR = action('symm1', 'Symmmetry R>L',     self.symmetryLeft)
         self.actions.symmetryL = action('symm2', 'Symmmetry L>R',     self.symmetryRight)
@@ -1518,7 +1387,7 @@ class MHApplication(gui3d.Application, mh.Application):
 
 
         # 5 - Camera toolbar
-        toolbar = self.camera_toolbar = mh.addToolBar("Camera")
+        # toolbar = self.camera_toolbar = mh.addToolBar("Camera")
 
         self.actions.front     = action('front',     'Front view',    self.frontView)
         self.actions.back      = action('back',      'Back view',     self.backView)
@@ -1530,7 +1399,7 @@ class MHApplication(gui3d.Application, mh.Application):
 
 
         # 6 - Other toolbar
-        toolbar = self.other_toolbar = mh.addToolBar("Other")
+        # toolbar = self.other_toolbar = mh.addToolBar("Other")
 
         self.actions.grab      = action('grab',      'Grab screen',   self.grabScreen)
         self.actions.help      = action('help',      'Help',          self.goToHelp)
@@ -1559,20 +1428,21 @@ class MHApplication(gui3d.Application, mh.Application):
 
         self.createActions()
         self.syncUndoRedo()
-
         self.createShortcuts()
-
-        self.splash = gui.SplashScreen(gui3d.app.getThemeResource('images', 'splash.png'), mh.getVersionDigitsStr())
-        self.splash.show()
-
-        self.tabs = self.mainwin.tabs
-
-        @self.tabs.mhEvent
-        def onTabSelected(tab):
-            self.switchCategory(tab.name)
 
     def run(self):
         self.start()
 
     def addExporter(self, exporter):
         self.getCategory('Files').getTaskByName('Export').addExporter(exporter)
+
+
+class Expando(object):
+    pass
+
+
+class ExpandoAction(object):
+    def setEnabled(enabled, second):
+        return
+    def setShortcut(shortcut, second):
+        return        

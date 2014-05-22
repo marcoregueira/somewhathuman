@@ -323,7 +323,7 @@ def redirect_standard_streams():
         sys.stderr = open(stderr_filename, "w", encoding=encoding, errors="replace")
 
 def close_standard_streams():
-    sys.stdout.close()
+    # sys.stdout.close()
     sys.stderr.close()
 
 def make_user_dir():
@@ -403,6 +403,7 @@ def main():
     os.environ['MH_RELEASE'] = "Yes" if isRelease() else "No"
 
     debug_dump()
+
     from core import G
     G.args = args
 
@@ -415,7 +416,11 @@ def main():
     # Here pyQt and PyOpenGL will be imported
     from mhmain import MHApplication
     application = MHApplication()
-    application.run()
+    # application.run() we want to run the startup sequence synchronously
+    application.startupSequence()
+    
+    #application2= MHApplication();
+    #application2.startupSequence();
 
     #import cProfile
     #cProfile.run('application.run()')
