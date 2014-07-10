@@ -1,5 +1,5 @@
 from __future__ import absolute_import  # Fix 'from .  import x' statements on python 2.6
-from flask import Flask, g, jsonify
+from flask import Flask, g, jsonify, request
 import sys
 import os
 import re
@@ -35,12 +35,12 @@ def mh():
 
 @app.route('/getmodel', methods=['POST'])
 def result():
-    #weight = float(request.forms.get('weight').upper())
-    #muscle = float(request.forms.get('muscle').upper())
-    #chest = float(request.forms.get('chest').upper())
-    #hip = float(request.forms.get('hip').upper())
-    #waist = float(request.forms.get('waist').upper())
-    #age = float(request.forms.get('age').upper())
+    weight = float(request.form.get('weight').upper())
+    muscle = float(request.form.get('muscle').upper())
+    chest = float(request.form.get('chest').upper())
+    hip = float(request.form.get('hip').upper())
+    waist = float(request.form.get('waist').upper())
+    age = float(request.form.get('age').upper())
 
     set_sys_path()
 
@@ -65,7 +65,7 @@ def result():
     directory = os.path.dirname(os.path.realpath(__file__)) + '/static/models/' + id
     os.makedirs(directory)
     filename = directory + '/model.obj'
-    support.exportObj(filename)
+    support.exportObj(filename, age, weight, muscle, chest, waist, hip)
 
 
     #clean up

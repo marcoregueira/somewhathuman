@@ -372,7 +372,7 @@ def load(app):
     category = app.getCategory('Modelling')
 
     humanmodifier.loadModifiers(getpath.getSysDataPath('modifiers/measurement_modifiers.json'), app.selectedHuman)
-    guimodifier.loadModifierTaskViews(getpath.getSysDataPath('modifiers/measurement_sliders.json'), app.selectedHuman, category, taskviewClass=MeasureTaskView)
+    #guimodifier.loadModifierTaskViews(getpath.getSysDataPath('modifiers/measurement_sliders.json'), app.selectedHuman, category, taskviewClass=MeasureTaskView)
 
 
     # TODO ??

@@ -44,7 +44,6 @@
         <div class="starter-template">
             <h1>SomewhatHuman</h1>
             <p class="lead">
-                This is a quick and dirty adaptation of MakeHuman to the Web.<br>
                 You can adjust some parameters and see what happens...
             </p>
         </div>
@@ -53,36 +52,41 @@
                 <form action="/getmodel" method="POST">
 
                     <div class="list-group">
-                        <a href="#" class="list-group-item active">
+                        <div class="list-group-item active">
                             <h4 class="list-group-item-heading">Body parameters</h4>
-                        </a>
-                        <a href="#" class="list-group-item">
+                        </div>
+                        <div class="list-group-item">
                             <p class="list-group-item-text">
                                 Age
                                 <div>
-                                    <input class="slider" name="age" value="0.5" />
+                                    <input class="sliderage" name="age" value="30" />
                                 </div>
                             </p>
-                        </a>
-                        <a href="#" class="list-group-item">
+                        </div>
+                        <div class="list-group-item">
                             Bust/Chest <div>
-                                <input class="slider" name="age" value="0.5" />
+                                <input class="slider" name="chest" value="0.5" />
                             </div>
-                        </a>
-                        <a href="#" class="list-group-item">
+                        </div>
+                        <div class="list-group-item">
                             Waist <div>
-                                <input class="slider" name="age" value="0.5" />
+                                <input class="sliderwaist" name="waist" value="0.5" />
                             </div>
-                        </a>
-                        <a href="#" class="list-group-item">
+                        </div>
+                        <div class="list-group-item">
                             Hip <div>
-                                <input class="slider" name="age" value="0.5" />
+                                <input class="slider" name="hip" value="0" />
                             </div>
-                        </a>
-                        <div href="#" class="list-group-item">
+                        </div>
+                        <div class="list-group-item">
                             Muscle <div>
-                                       <input class="slider" name="age" value="0.5" />
+                                       <input class="slider" name="muscle" value="0.5" />
                                    </div>
+                        </div>
+                        <div class="list-group-item">
+                            Weight <div>
+                                <input class="slider" name="weight" value="0.5" />
+                            </div>
                         </div>
                         <div href="#" class="list-group-item text-center">
                             <button class="btn btn-success btnsend" type="submit">Reload</button>
@@ -132,14 +136,14 @@
 
             scene = new THREE.Scene();
 
-            var ambient = new THREE.AmbientLight(0x444444);
+            var ambient = new THREE.AmbientLight(0x443333);
             scene.add(ambient);
 
             particleLight = new THREE.Mesh(new THREE.SphereGeometry(4, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
             scene.add(particleLight);
 
-            var directionalLight = new THREE.DirectionalLight(0xffeedd);
-            directionalLight.position.set(0, 0, 1).normalize();
+            var directionalLight = new THREE.DirectionalLight(0x888877);
+            directionalLight.position.set(0, 20, 40).normalize();
             scene.add(directionalLight);
 
             pointLight = new THREE.PointLight(0xff6666, 0.3);
@@ -177,30 +181,33 @@
             renderer.setSize($(container).width(), $(container).height());
 
         }
-        function animate() {
 
+        function animate() {
             requestAnimationFrame(animate);
             render();
-
         }
+
         function render() {
 
             var timer = Date.now() * 0.0005;
 
-            camera.position.x = 220 * Math.cos(timer);
+            camera.position.x = 0;//*  Math.cos(timer);
             camera.position.y = 100; // * 20;
-            camera.position.z = 220 * Math.sin(timer); //Math.sin(timer) * 10;
+            camera.position.z = 250; // * Math.sin(timer); //* Math.sin(timer); //Math.sin(timer) * 10;
 
             //camera.position.x = 220;
             //camera.position.y = 100;
             //camera.position.z = 220;
 
+            scene.position.y = 90;
+            scene.position.z = 0;
+
             camera.lookAt(scene.position);
 
             scene.position.y = 100;
-            particleLight.position.x = Math.sin(timer * 4) * 3009;
-            particleLight.position.y = Math.cos(timer * 6) * 4000;
-            particleLight.position.z = -Math.cos(timer * 4) * 3009;
+            //particleLight.position.x = Math.sin(timer * 4) * 3009;
+            //particleLight.position.y = Math.cos(timer * 6) * 4000;
+            //particleLight.position.z = -Math.cos(timer * 4) * 3009;
 
             renderer.render(scene, camera);
         }
@@ -212,6 +219,30 @@
                     max: 1,
                     type: 'single',
                     step: 0.1,
+                    postfix: "",
+                    prettify: false,
+                    hideMinMax: true,
+                    hideFromTo: false,
+                    hasGrid: true
+                });
+
+                $('.sliderwaist').ionRangeSlider({
+                    values: [4121, 10760, 10757, 10777, 10776, 10779, 10780, 10778, 10781, 10771, 10773, 10772, 10775, 10774, 10814, 10834, 10816, 10817, 10818, 10819, 10820, 10821, 4181, 4180, 4179, 4178, 4177, 4176, 4175, 4196, 4173, 4131, 4132, 4129, 4130, 4128, 4138, 4135, 4137, 4136, 4133, 4134, 4108, 4113, 4118, 4121],
+                    type: 'single',
+                    postfix: "",
+                    prettify: false,
+                    hideMinMax: true,
+                    hideFromTo: false,
+                    hasGrid: true
+                });
+
+
+
+                $('.sliderage').ionRangeSlider({
+                    min: 1,
+                    max: 90,
+                    type: 'single',
+                    step: 1,
                     postfix: "",
                     prettify: false,
                     hideMinMax: true,

@@ -42,7 +42,7 @@ Common taskview for managing modifier sliders
 import gui
 import gui3d
 import humanmodifier
-import modifierslider
+#import modifierslider
 import getpath
 from core import G
 import log
@@ -185,15 +185,15 @@ class ModifierTaskView(gui3d.TaskView):
         G.app.statusPersist(format, *args)
 
 
-class GroupBoxRadioButton(gui.RadioButton):
-    def __init__(self, task, group, label, groupBox, selected=False):
-        super(GroupBoxRadioButton, self).__init__(group, label, selected)
-        self.groupBox = groupBox
-        self.task = task
+#class GroupBoxRadioButton(gui.RadioButton):
+#    def __init__(self, task, group, label, groupBox, selected=False):
+#        super(GroupBoxRadioButton, self).__init__(group, label, selected)
+#        self.groupBox = groupBox
+#        self.task = task
 
-    def onClicked(self, event):
-        self.task.groupBox.showWidget(self.groupBox)
-        #self.task.onSliderFocus(self.groupBox.children[0]) # TODO needed for measurement
+#    def onClicked(self, event):
+#        self.task.groupBox.showWidget(self.groupBox)
+#        #self.task.onSliderFocus(self.groupBox.children[0]) # TODO needed for measurement
 
 
 def _getCamFunc(cameraName):
@@ -212,36 +212,36 @@ def loadModifierTaskViews(filename, human, category, taskviewClass=None):
     Create modifier task views from modifiersliders defined in slider definition
     file.
     """
-    import json
+    #import json
 
-    if not taskviewClass:
-        taskviewClass = ModifierTaskView
+    #if not taskviewClass:
+    #    taskviewClass = ModifierTaskView
 
-    data = json.load(open(filename, 'rb'), object_pairs_hook=OrderedDict)
+    #data = json.load(open(filename, 'rb'), object_pairs_hook=OrderedDict)
     taskViews = []
-    # Create task views
-    for taskName, taskViewProps in data.items():
-        sName = taskViewProps.get('saveName', None)
-        label = taskViewProps.get('label', None)
-        taskView = taskviewClass(category, taskName, label, sName)
-        taskView.sortOrder = taskViewProps.get('sortOrder', None)
-        taskView.showMacroStats = taskViewProps.get('showMacroStats', None)
-        category.addTask(taskView)
+    ## Create task views
+    #for taskName, taskViewProps in data.items():
+    #    sName = taskViewProps.get('saveName', None)
+    #    label = taskViewProps.get('label', None)
+    #    taskView = taskviewClass(category, taskName, label, sName)
+    #    taskView.sortOrder = taskViewProps.get('sortOrder', None)
+    #    taskView.showMacroStats = taskViewProps.get('showMacroStats', None)
+    #    category.addTask(taskView)
 
-        # Create sliders
-        for sliderCategory, sliderDefs in taskViewProps['modifiers'].items():
-            for sDef in sliderDefs:
-                modifierName = sDef['mod']
-                modifier = human.getModifier(modifierName)
-                label = sDef.get('label', None)
-                camFunc = _getCamFunc( sDef.get('cam', None) )
-                slider = modifierslider.ModifierSlider(modifier, label=label, cameraView=camFunc)
-                taskView.addSlider(sliderCategory, slider)
+    #    # Create sliders
+    #    for sliderCategory, sliderDefs in taskViewProps['modifiers'].items():
+    #        for sDef in sliderDefs:
+    #            modifierName = sDef['mod']
+    #            modifier = human.getModifier(modifierName)
+    #            label = sDef.get('label', None)
+    #            camFunc = _getCamFunc( sDef.get('cam', None) )
+    #            slider = modifierslider.ModifierSlider(modifier, label=label, cameraView=camFunc)
+    #            taskView.addSlider(sliderCategory, slider)
 
-        if taskView.saveName is not None:
-            gui3d.app.addLoadHandler(taskView.saveName, taskView.loadHandler)
-            gui3d.app.addSaveHandler(taskView.saveHandler)
+    #    if taskView.saveName is not None:
+    #        gui3d.app.addLoadHandler(taskView.saveName, taskView.loadHandler)
+    #        gui3d.app.addSaveHandler(taskView.saveHandler)
 
-        taskViews.append(taskView)
+    #    taskViews.append(taskView)
 
     return taskViews

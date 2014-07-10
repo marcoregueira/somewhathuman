@@ -609,9 +609,10 @@ class MHApplication(gui3d.Application, mh.Application):
         log.message('Applying targets')
         self.loadFinish()
 
-        if self.settings.get('preloadTargets', False):
-            log.message('Loading macro targets')
-            self.loadMacroTargets()
+        #if self.settings.get('preloadTargets', False):
+        #Always load targets
+        log.message('Loading macro targets')
+        self.loadMacroTargets()
 
         log.message('Loading done')
 
