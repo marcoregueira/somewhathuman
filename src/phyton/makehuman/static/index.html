@@ -70,7 +70,7 @@
                         </div>
                         <div class="list-group-item">
                             Waist <div>
-                                <input class="sliderwaist" name="waist" value="0.5" />
+                                <input class="slider" name="waist" value="0.5" />
                             </div>
                         </div>
                         <div class="list-group-item">
@@ -195,19 +195,25 @@
             camera.position.y = 100; // * 20;
             camera.position.z = 250; // * Math.sin(timer); //* Math.sin(timer); //Math.sin(timer) * 10;
 
-            //camera.position.x = 220;
-            //camera.position.y = 100;
-            //camera.position.z = 220;
+
+            camera.position.x = 220;
+            camera.position.y = 100;
+            camera.position.z = 220;
+
+
+            camera.position.x = 220 * Math.cos(timer);
+            camera.position.y = 100; // * 20;
+            camera.position.z = 220 * Math.sin(timer); //Math.sin(timer) * 10;
 
             scene.position.y = 90;
             scene.position.z = 0;
 
             camera.lookAt(scene.position);
 
-            scene.position.y = 100;
-            //particleLight.position.x = Math.sin(timer * 4) * 3009;
-            //particleLight.position.y = Math.cos(timer * 6) * 4000;
-            //particleLight.position.z = -Math.cos(timer * 4) * 3009;
+            //scene.position.y = 100;
+            particleLight.position.x = Math.sin(timer * 4) * 3009;
+            particleLight.position.y = Math.cos(timer * 6) * 4000;
+            particleLight.position.z = -Math.cos(timer * 4) * 3009;
 
             renderer.render(scene, camera);
         }
@@ -268,6 +274,5 @@
             });
 
     </script>
-
 </body>
 </html>
