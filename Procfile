@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath src/phyton/makehuman app:app
