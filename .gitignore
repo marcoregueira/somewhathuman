@@ -16,6 +16,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 
+original/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*

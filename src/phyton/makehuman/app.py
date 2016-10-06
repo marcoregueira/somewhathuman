@@ -26,12 +26,9 @@ def set_sys_path():
     syspath.extend(sys.path)
     sys.path = syspath
 
-#@app.before_request
-#def set_global_objects():
-#    set_sys_path()
-@app.route('/mh')
-def mh():
-    pass
+@app.route('/')
+def root():
+    return app.send_static_file('index.html')
 
 @app.route('/getmodel', methods=['POST'])
 def result():
