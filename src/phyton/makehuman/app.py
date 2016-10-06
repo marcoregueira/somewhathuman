@@ -26,10 +26,6 @@ def set_sys_path():
     syspath.extend(sys.path)
     sys.path = syspath
 
-@app.route('/')
-def root():
-    return app.send_static_file('index.html')
-
 @app.route('/getmodel', methods=['POST'])
 def result():
     weight = float(request.form.get('weight').upper())
@@ -69,6 +65,10 @@ def result():
     close_standard_streams()
     return jsonify(model = '/models/' + id + '/model.obj',
                    texture= '/models/' + id + '/model.mtl')
+
+@app.route('/')
+def root():
+    return app.send_static_file('index.html')
 
 if __name__ == '__main__':
     import os
