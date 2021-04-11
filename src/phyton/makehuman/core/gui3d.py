@@ -515,10 +515,7 @@ class Application():
         self.switchTask(category.task)
 
     def getCategory(self, name, sortOrder = None):
-        category = self.categories.get(name)
-        if category:
-            return category
-        return self.addCategory(Category(name), sortOrder = sortOrder)
+        return Category(name)
 
     def getTask(self, category, task):
         """
