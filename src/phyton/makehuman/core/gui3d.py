@@ -264,20 +264,19 @@ class TaskView(View):
         return {}
 
     def showWidgets(self):
-        super(TaskView, self).showWidgets()
-        mh.showPanels(self.left, self.right)
+        pass
 
     def addLeftWidget(self, widget):
-        return self.left.addWidget(widget)
+        pass
 
     def addRightWidget(self, widget):
-        return self.right.addWidget(widget)
+        pass
 
     def removeLeftWidget(self, widget):
-        self.left.removeWidget(widget)
+        pass
 
     def removeRightWidget(self, widget):
-        self.right.removeWidget(widget)
+        pass
 
 class Category(View):
 
@@ -294,37 +293,12 @@ class Category(View):
         self.sortOrder = None
 
     def _taskTab(self, task):
-        if task.tab is None:
-            task.tab = self.tabs.addTab(task.name, task.label or task.name, self.tasks.index(task))
+        pass
 
     def realize(self, app):
-        self.tasks.sort(key = lambda t: t.sortOrder)
-        for task in self.tasks:
-            self._taskTab(task)
-
-        @self.tabs.mhEvent
-        def onTabSelected(tab):
-            self.task = tab.name
-            app.switchTask(tab.name)
+        pass
 
     def addTask(self, task):
-        if task.name in self.tasksByName:
-            raise KeyError('A task with this name already exists', task.name)
-        if task.sortOrder == None:
-            orders = [t.sortOrder for t in self.tasks]
-            o = 0
-            while o in orders:
-                o = o +1
-            task.sortOrder = o
-
-        self.tasks.append(task)
-        self.tasks.sort(key = lambda t: t.sortOrder)
-
-        self.tasksByName[task.name] = task
-        self.addView(task)
-        if self.tabs is not None:
-            self._taskTab(task)
-        self.task = self.tasks[0].name
         return task
 
     def getTaskByName(self, name):
