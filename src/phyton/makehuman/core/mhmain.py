@@ -426,6 +426,12 @@ class MHApplication(gui3d.Application, mh.Application):
         path = self.pluginsToLoad.pop()
         try:
             name, ext = os.path.splitext(os.path.basename(path))
+
+            if name == 'export_obj':
+                return
+            if name == 'scripting':
+                return
+                
             if name not in self.settings['excludePlugins']:
                 log.message('Importing plugin %s', name)
                 #module = imp.load_source(name, path)
@@ -790,8 +796,8 @@ class MHApplication(gui3d.Application, mh.Application):
     def setTheme(self, theme):
 
         # Disabling this check allows faster testing of a skin by reloading it.
-        #if self.theme == theme:
-        #    return
+        if self.theme == theme:
+            return
 
         # Set defaults
         self.clearColor = [0.5, 0.5, 0.5]
