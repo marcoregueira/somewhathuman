@@ -257,7 +257,6 @@ class TaskView(View):
         self.label = label
         self.focusWidget = None
         self.tab = None
-        self.left, self.right = mh.addPanels()
         self.sortOrder = None
 
     def getModifiers(self):
