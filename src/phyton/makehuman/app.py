@@ -9,8 +9,8 @@ from makehuman import make_user_dir, get_platform_paths, redirect_standard_strea
 # from flask.ext.compress import Compress
 app = Flask(__name__, static_folder='static', static_url_path='')
 # Compress(app)
-#app.config['DEBUG'] = True
-#app.debug = True
+app.config['DEBUG'] = True
+app.debug = True
 # Make the WSGI interface available at the top level so wfastcgi can get it.
 wsgi_app = app.wsgi_app
 
@@ -77,4 +77,4 @@ if __name__ == '__main__':
         port = int(os.environ.get('SERVER_PORT', '80'))
     except ValueError:
         port = 5555
-    app.run(host, port, debug = true)
+    app.run(host, port)
