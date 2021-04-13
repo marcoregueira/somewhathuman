@@ -217,29 +217,29 @@ class MHApplication(gui3d.Application, mh.Application):
         self.theme = None
 
         @self.currentFile.mhEvent
-        def onModified(event):
-            self.updateFilenameCaption()
+        # def onModified(event):
+        #    self.updateFilenameCaption()
 
         #self.modelCamera = mh.Camera()
         #self.modelCamera.switchToOrtho()
-        self.modelCamera = mh.OrbitalCamera()
+        #self.modelCamera = mh.OrbitalCamera()
         #self.modelCamera.debug = True
 
-        @self.modelCamera.mhEvent
+        #@self.modelCamera.mhEvent
         def onChanged(event):
             for category in self.categories.itervalues():
                 for task in category.tasks:
                     task.callEvent('onCameraChanged', event)
 
-        mh.cameras.append(self.modelCamera)
+        #mh.cameras.append(self.modelCamera)
 
         #self.guiCamera = mh.Camera()
         #self.guiCamera._fovAngle = 45
         #self.guiCamera._eyeZ = 10
         #self.guiCamera._projection = 0
-        self.guiCamera = mh.OrbitalCamera()
+        #self.guiCamera = mh.OrbitalCamera()
 
-        mh.cameras.append(self.guiCamera)
+        #mh.cameras.append(self.guiCamera)
 
     def _versionSentinel(self):
         # dummy method used for checking the shortcuts.ini version
@@ -455,7 +455,7 @@ class MHApplication(gui3d.Application, mh.Application):
 
                 # Process all non-user-input events in the queue to make sure
                 # any callAsync events are run.
-                self.processEvents()
+                # self.processEvents()
             else:
                 self.modules[name] = None
         except Exception, _:
@@ -503,51 +503,7 @@ class MHApplication(gui3d.Application, mh.Application):
         # self.progressBar.hide()
 
     def loadGrid(self):
-        if self.backplaneGrid:
-            self.removeObject(self.backplaneGrid)
-
-        if self.groundplaneGrid:
-            self.removeObject(self.groundplaneGrid)
-
-        offset = self.selectedHuman.getJointPosition('ground')[1]
-        spacing = 1 if self.settings['units'] == 'metric' else 3.048
-
-        # Background grid
-        gridSize = int(200/spacing)
-        if gridSize % 2 != 0:
-            gridSize += 1
-        if self.settings['units'] == 'metric':
-            subgrids = 10
-        else:
-            subgrids = 12
-        backGridMesh = geometry3d.GridMesh(gridSize, gridSize, spacing, offset = -10, plane = 0, subgrids = subgrids)
-        backGridMesh.setMainColor(self.gridColor)
-        backGridMesh.setSubColor(self.gridSubColor)
-        backGridMesh.lockRotation = True
-        backGridMesh.restrictVisibleToCamera = True
-        backGridMesh.minSubgridZoom = (1.0/spacing) * float(subgrids)/5
-        self.backplaneGrid = gui3d.Object(backGridMesh)
-        self.backplaneGrid.excludeFromProduction = True
-        self.backplaneGrid.placeAtFeet = True
-        self.backplaneGrid.setShadeless(1)
-        #self.backplaneGrid.setPosition([0,offset,0])
-        self.addObject(self.backplaneGrid)
-
-        # Ground grid
-        gridSize = int(20/spacing)
-        if gridSize % 2 != 0:
-            gridSize += 1
-        groundGridMesh = geometry3d.GridMesh(gridSize, gridSize, spacing, offset = 0, plane = 1, subgrids = subgrids)
-        groundGridMesh.setMainColor(self.gridColor)
-        groundGridMesh.setSubColor(self.gridSubColor)
-        groundGridMesh.minSubgridZoom = (1.0/spacing) * float(subgrids)/5
-        self.groundplaneGrid = gui3d.Object(groundGridMesh)
-        self.groundplaneGrid.excludeFromProduction = True
-        self.groundplaneGrid.placeAtFeet = True
-        self.groundplaneGrid.setShadeless(1)
-        #self.groundplaneGrid.setPosition([0,offset,0])
-        groundGridMesh.restrictVisibleAboveGround = True
-        self.addObject(self.groundplaneGrid)
+        pass
 
     def loadMacroTargets(self):
         """
@@ -595,10 +551,10 @@ class MHApplication(gui3d.Application, mh.Application):
         self.loadHuman()
 
         log.message('Loading scene')
-        self.loadScene()
+        # self.loadScene()
 
         log.message('Loading main GUI')
-        self.loadMainGui()
+        # self.loadMainGui()
 
         log.message('Loading plugins')
         self.loadPlugins()
@@ -942,7 +898,7 @@ class MHApplication(gui3d.Application, mh.Application):
         # Process all non-user-input events in the queue to run callAsync tasks.
         # This is invoked here so events are processed in every step during the
         # onStart() init sequence.
-        self.processEvents()
+        # self.processEvents()
 
     # Global dialog
     def prompt(self, title, text, button1Label, button2Label=None, button1Action=None, button2Action=None, helpId=None, fmtArgs = None):
