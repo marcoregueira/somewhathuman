@@ -825,38 +825,16 @@ class RenderThread(Thread):
 
     def progress(self, progress, status=None):
         import mh
-        mh.callAsyncThread(self.app.progress, progress, status)
+        pass;
 
 
     def prompt(self):
         import mh
-        mh.callAsyncThread(self.app.prompt,
-                           "Render finished", "The image is saved in {0}".format(self.renderPath),
-                           "OK", helpId="'renderFinishedPrompt'")
+        pass;
 
     def run(self):
         
-        for filename, status in self.filenames:
-            command = '%s "%s"' % ('aqsis -Progress', filename)            
-            renderProc = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, universal_newlines=True)
-
-            self.progress(0.0, status)
-
-            try:
-                while True:
-                    line = renderProc.stdout.readline()
-                    if line == '':
-                        break
-                   
-                    progress = line.split()[1][0:-1]
-                    self.progress(float(progress)/100.0)
-            except:
-                pass
-
-            self.progress(1.0)
-
-        self.prompt()
-
+        pass;
 
         
         """
