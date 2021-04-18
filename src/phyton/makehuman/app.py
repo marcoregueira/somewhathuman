@@ -43,7 +43,7 @@ def result():
     make_user_dir()
     get_platform_paths()
     redirect_standard_streams()
-    init_logging()
+    # init_logging()
 
     from core import G
     G.args = dict()
