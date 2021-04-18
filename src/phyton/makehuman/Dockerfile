@@ -55,6 +55,8 @@ RUN pip install -r /app/requirements.txt
 COPY run.sh /etc/service/app/run
 RUN chmod -R 755 /etc/service/app/run
 
+ENV SERVER_HOST=0.0.0.0
+ENV SERVER_PORT=80
 ENV FLASK_ENV=development
 
 COPY . /app
