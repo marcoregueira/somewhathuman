@@ -58,7 +58,7 @@ def result():
     directory = os.path.dirname(os.path.realpath(__file__)) + '/static/models/' + id
     os.makedirs(directory)
     filename = directory + '/model.obj'
-    log.message('Requesting model ' + filename)
+    # log.message('Requesting model ' + filename)
     support.exportObj(filename, age, weight, muscle, chest, waist, hip)
 
 
